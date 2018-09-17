@@ -35,30 +35,53 @@ let Npc = {
 };
 
 /* Player information */
-let Player = {
-    nameChoices: ["Daunted", "Fighter", "Jester", "Knight", "Chaos", "Cloud", "Freedom"],
-    randomSpawn: [0,1,2],
-    firstName: "",
-    lastName: "",
-    damage: 10,
-    hitpoints: 100,
-    mana: "",
-    level: 1,
-    experience: 0,
-    class: "",
-    playerX: 1,
-    playerY: 2,
-    inventory: "",
+let Player = new function(){
+    this.randomSpawn = [0,1,2];
+    this.firstName = "",
+    this.lastName = "",
+    this.damage = 10,
+    this.hitpoints = 100,
+    this.mana = "",
+    this.level = 1,
+    this.experience = 0,
+    this.class = "",
+    this.playerX = 1,
+    this.playerY = 2,
+    this.inventory = "",
+
+    /* Nested constructor function to provide more information about the player */
+    this.personalInfo = new function()
+                  {
+                    nameChoices = ["Daunted", "Fighter", "Jester", "Knight", "Chaos", "Cloud", "Freedom"],
+                    nameLength = nameChoices.length,
+                    /* Using two random generators because sharing one variable would retrieve duplicate names */
+                    randFirstName = nameChoices[Math.floor(Math.random() * nameLength)],
+                    randLastName = nameChoices[Math.floor(Math.random() * nameLength)],
+                    this.myName = function(){
+                        currFName = randFirstName;
+                        currLName = randLastName;
+                        nameChoices.forEach(function(tag){
+                            console.log(`Name Choices: ${tag}`)
+                        });
+                        console.log(`huh...uh...${currFName}....${currLName}..\n\nPlease Call Me ${currFName} ${currLName} !`);
+                    },
+                    this.myStats = function(hp, dmg){
+                        hp = Player.hitpoints;
+                        dmg = Player.damage;
+                        console.log("Stats:\n");
+                        console.log(`Hitpoints: ${hp}\nDamage: ${dmg}\nLevel: ${Player.level}\n`);
+                    }
+                  },
 
     /* Attack mechanic */
-    attackFunc: function(dmg){
+    this.attackFunc = function(dmg){
         dmg = this.damage;
         Npc.hitpoints -= dmg;
         if(Npc.hitpoints <= 0){
             Player.levelFunc();
             Npc.hitpoints = 0;
             console.log("\n");
-            console.log("----------------BATTLE-----------------");
+            console.log("%c ----------------BATTLE-----------------", 'background: #222; color: #bada55');
             console.log(`\nYou've attacked the Enemy for ${Player.damage}`);
             console.log(`Enemy HP: ${Npc.hitpoints}`);
             console.log(`You are now level: ${Player.level}`);
@@ -69,18 +92,18 @@ let Player = {
     },
 
     /* Level up Mechanic */
-    levelFunc: function(){
+    this.levelFunc = function(){
         Player.experience += 1;
         if(Player.experience > 0 * Player.level){
             Player.level++;
         }
     },
 
-    myInventory: [],
-    allItems: 0,
+    this.myInventory = [],
+    this.allItems = 0,
 
     /* Inventory System */
-    inventory: function(){
+    this.inventory = function(){
         let inventory = [];
         let itemList =
         ["Demon Blade",
@@ -109,7 +132,7 @@ let Player = {
 
             /* Check for limiting items to 3 */
             if(this.allItems >= inventoryFull){
-                console.log("You can only hold 3 weapons.");
+                console.log("%c You can only hold 3 weapons.", 'color: red');
             } else{
                 /* Checking if the player already has an item */
                 /* If a player already has an item, you will not
@@ -126,28 +149,6 @@ let Player = {
         console.log(Player.myInventory);
     }
 };
-
-/* Further Basic information about the player */
-let Events = {
-    randFirstName: Player.nameChoices[Math.floor(Math.random() * Player.nameChoices.length)],
-    randLastName: Player.nameChoices[Math.floor(Math.random() * Player.nameChoices.length)],
-
-    myName: function(){
-        currFName = Events.randFirstName;
-        currLName = Events.randLastName;
-        Player.nameChoices.forEach(function(tag){
-            console.log(`Name Choices: ${tag}`)
-        });
-        console.log(`huh...uh...${currFName}....${currLName}..\n\nPlease Call Me ${currFName} ${currLName} !`);
-    },
-
-    myStats: function(hp, dmg){
-        hp = Player.hitpoints;
-        dmg = Player.damage;
-        console.log("Stats:\n");
-        console.log(`Hitpoints: ${hp}\nDamage: ${dmg}\nLevel: ${Player.level}\n`);
-    }
-}
 
 /* Initialize a new instance for the map */
 let World = {
@@ -197,7 +198,7 @@ let World = {
             } else{
               console.log("\n");
               console.log("You have spawned at\n");
-              console.log(`Coordinates: [${World.publicX}][${World.publicY}]`);
+              console.log(`%c Coordinates: [${World.publicX}][${World.publicY}]`, 'background: #222; color: #bada55');
               console.log("\n");
               World.playerEvents();
             }
@@ -206,8 +207,8 @@ let World = {
         /* Different events that will occur based on your coordinate */
         playerEvents: function(){
               if(this.publicX == 2 && this.publicY == 0){
-                  if(Player.level < 5){
-                      console.log("\n\n----------------HOME SWEET HOME-----------------");
+                  if(Player.level < 4){
+                      console.log("\n\n%c ----------------HOME SWEET HOME-----------------", 'background: #222; color: #bada55');
                       console.log("You've found your home but you need to be at least level 5 to enter it.\n\n");
                       console.log("----------------------------------------------------");
                   }
@@ -219,7 +220,7 @@ let World = {
 
               if(this.publicX == 1 && this.publicY == 1){
                       console.log("\n\n");
-                      console.log("----------------GEMS SHOP-----------------");
+                      console.log("%c ----------------GEMS SHOP-----------------", 'background: #222; color: #bada55');
                       console.log("My name is Gem, and i'm afraid that this isn't your home.\n");
                       console.log("Although, i'll offer a hint... The first digit is 2.");
                       console.log("------------------------------------------");
@@ -228,7 +229,7 @@ let World = {
 
               if(this.publicX == 0 && this.publicY == 1){
                       console.log("\n\n");
-                      console.log("------------------WEAPON CHEST----------------------");
+                      console.log("%c ------------------WEAPON CHEST----------------------", 'background: #222; color: #bada55');
                       console.log("You enter a Weapon Shop and retrieve a new weapon!\n");
                       console.log("----------------------------------------------------");
                       Player.inventory();
@@ -237,7 +238,7 @@ let World = {
 
               if(this.publicX == 2 && this.publicY == 1){
                       console.log("\n\n");
-                      console.log("------------------Helpful Thought----------------------");
+                      console.log("%c ------------------Helpful Thought----------------------", 'background: #222; color: #bada55');
                       console.log("The path home can seem like a long and difficult one but remember not to give up.!\n");
                       console.log("-------------------------------------------------------");
                       console.log("\n\n");
@@ -245,7 +246,7 @@ let World = {
 
               if(this.publicX == 2 && this.publicY == 2){
                       console.log("\n\n");
-                      console.log("------------------A Wild Dream----------------------");
+                      console.log("%c ------------------A Wild Dream----------------------", 'background: #222; color: #bada55');
                       console.log("You fall unconcious and have a dream that you found your house.\n");
                       console.log("----------------------------------------------------");
                       console.log("\n\n");
@@ -256,13 +257,13 @@ let World = {
                       if(this.caveCounter == 0){
                           this.caveCounter = 1;
                           this.visit = true;
-                          console.log("------------------Cave(First Visit)----------------------");
+                          console.log("%c ------------------Cave(First Visit)----------------------", 'background: #222; color: #bada55');
                           console.log("WELCOME TO MY CAVE, I'll give you a hint if you come back once more.\n");
                           console.log("---------------------------------------------------------");
                       }
                   } else if(this.visit === true){
                     if(this.caveCounter == 1){
-                        console.log("------------------Cave(Second Visit)----------------------");
+                        console.log("%c ------------------Cave(Second Visit)----------------------", 'background: #222; color: #bada55');
                         console.log("WELCOME TO MY CAVE, as promised the second number is 0.\n");
                         console.log("----------------------------------------------------------");
                     }
@@ -287,7 +288,7 @@ let World = {
            to always win. the fact that it's a (close call) is apart
            of the story */
         gameOver: function(){
-            console.log("------------------Story Climax----------------------");
+            console.log("%c ------------------Story Climax----------------------", 'background: #222; color: #bada55');
             console.log("After traveling through mountins, forests, and castles, you've finally managed\n");
             console.log("to find your home. Throughout this entire journey, you've met many different\n");
             console.log("people. You've also became really strong.");
@@ -295,7 +296,7 @@ let World = {
             console.log(`Weapons Collected: ${Player.myInventory}`);
             console.log(`Throughout your task, you've spoke to many individuals and unlocked hints that led you\n`);
             console.log(`to where you are now. You are now able to take on the final boss. Goodluck.`);
-            console.log("-----------------------------------------------------");
+            console.log("%c -------------------FINAL BOSS--------------------", 'background: #222; color: #bada55');
 
             let bossHealth = 100;
             let bossAttack = 5;
@@ -309,8 +310,6 @@ let World = {
         },
 }
 
-Player.inventory();
-
 /* Global variables for various things */
 let currPlayerHealth = Player.hitpoints;
 let currBossHealth = Npc.hitpoints;
@@ -323,8 +322,8 @@ console.log("1. Start Game\n2. Options \n3. Exit");
 
 /* Initialize Game Loop if bool=>true */
 if(Menu.startGame){
-    console.log(Events.myName());
-    console.log(Events.myStats());
+    console.log(Player.personalInfo.myName());
+    console.log(Player.personalInfo.myStats());
 
     setTimeout(function(){
       gameFrame = setInterval(function(){
