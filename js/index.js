@@ -1,26 +1,3 @@
-/*  ------ Video Game Story -------
-1. Player starts at the main menu
-2. Everything is randomly selected
-3. Generate a characters name using an array filled with random words
-and then concatenate each word to make a first name and last name
-4. Present the characters Hitpoints, and Damage through an Object
-5. The player will have basic mechanics such as attacking and
-obtaining a new randomly generated item through a list which is from an array
-6. The player will spawn at a random coordinate on the console that will be
-created using arrays with X and Y coordinates.
-7. A random coordinate will be chosen, and depending on which coordinate the
-player lands on, he will either vs a monster or be welcomed with a hidden
-chest.
-8. The objective of this story is to find his home and through all of this
-he must face many obstacles before being able to do so.
-9. The player will not be able to finish the game unless you roll the correct
-coordinates which will be the same location each time but due to the dice being
-random, this will vary between a short round or not.
-10. The player is capable of leveling up and becoming stronger.
-11. The game can be progress much faster if you change the variable "gameSped"
-12. You must be AT LEAST level 5 before you can fight the FINAL BOSS
-*/
-
 /* Game initializer */
 let Menu = {
     startGame: true,
@@ -87,6 +64,9 @@ let Player = new function(){
             console.log(`You are now level: ${Player.level}`);
             console.log("\nProceeding to next area.");
             console.log("---------------------------------------");
+            setTimeout(function(){
+                console.log("%c A Piece of Cake. 😸", 'color: #376b77');
+            },100);
             console.log("\n");
         }
     },
@@ -197,8 +177,62 @@ let World = {
                 console.log("error");
             } else{
               console.log("\n");
-              console.log("You have spawned at\n");
-              console.log(`%c Coordinates: [${World.publicX}][${World.publicY}]`, 'background: #222; color: #bada55');
+              console.log(`You have spawned at coordinates: [${World.publicX}][${World.publicY}]\n`);
+
+              if(this.publicX == 0 && this.publicY == 0){
+                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 0 && this.publicY == 1){
+                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 0 && this.publicY == 2){
+                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 1 && this.publicY == 0){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 1 && this.publicY == 1){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 1 && this.publicY == 2){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 2 && this.publicY == 0){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #bada55');
+              }
+
+              else if(this.publicX == 2 && this.publicY == 1){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+              }
+
+              else if(this.publicX == 2 && this.publicY == 2){
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+              }
+
               console.log("\n");
               World.playerEvents();
             }
@@ -223,8 +257,11 @@ let World = {
                       console.log("%c ----------------GEMS SHOP-----------------", 'background: #222; color: #bada55');
                       console.log("My name is Gem, and i'm afraid that this isn't your home.\n");
                       console.log("Although, i'll offer a hint... The first digit is 2.");
+                      setTimeout(function(){
+                          console.log("%c It may not seem like much but if you use this hint to your advantage, it will supplement you on your journey.", 'color: red');
+                      },100);
                       console.log("------------------------------------------");
-                      console.log("\n\n");
+                      console.log("\n");
               }
 
               if(this.publicX == 0 && this.publicY == 1){
@@ -233,7 +270,10 @@ let World = {
                       console.log("You enter a Weapon Shop and retrieve a new weapon!\n");
                       console.log("----------------------------------------------------");
                       Player.inventory();
-                      console.log("\n\n");
+                      setTimeout(function(){
+                          console.log("%c Congragulations on your new gear. Various rumours have been spoken about how powerful that weapon is.", 'color: red');
+                      },100);
+                      console.log("\n");
               }
 
               if(this.publicX == 2 && this.publicY == 1){
@@ -241,7 +281,10 @@ let World = {
                       console.log("%c ------------------Helpful Thought----------------------", 'background: #222; color: #bada55');
                       console.log("The path home can seem like a long and difficult one but remember not to give up.!\n");
                       console.log("-------------------------------------------------------");
-                      console.log("\n\n");
+                      setTimeout(function(){
+                          console.log("%c Maybe home isn't such a great idea afterall.", 'color: red');
+                      },100);
+                      console.log("\n");
               }
 
               if(this.publicX == 2 && this.publicY == 2){
@@ -249,7 +292,10 @@ let World = {
                       console.log("%c ------------------A Wild Dream----------------------", 'background: #222; color: #bada55');
                       console.log("You fall unconcious and have a dream that you found your house.\n");
                       console.log("----------------------------------------------------");
-                      console.log("\n\n");
+                      setTimeout(function(){
+                          console.log(" %c It couldn't have been a dream. It felt too real!!", 'color: red');
+                      },100);
+                      console.log("\n");
               }
 
               if(this.publicX == 0 && this.publicY == 2){
@@ -260,26 +306,28 @@ let World = {
                           console.log("%c ------------------Cave(First Visit)----------------------", 'background: #222; color: #bada55');
                           console.log("WELCOME TO MY CAVE, I'll give you a hint if you come back once more.\n");
                           console.log("---------------------------------------------------------");
+                          setTimeout(function(){
+                              console.log(" %c I have to come back again just to get a hint? *sigh*", 'color: red');
+                          },100);
                       }
                   } else if(this.visit === true){
                     if(this.caveCounter == 1){
                         console.log("%c ------------------Cave(Second Visit)----------------------", 'background: #222; color: #bada55');
                         console.log("WELCOME TO MY CAVE, as promised the second number is 0.\n");
                         console.log("----------------------------------------------------------");
+                        setTimeout(function(){
+                            console.log("%c Thats right... he had better give me my second hint.", 'color: red');
+                        },100);
                     }
                   }
               }
 
               /* These are the 3 coordinates that aren't occupied */
               /* Therefore, they are being used for the battles */
-              if(this.publicX == 0 && this.publicY == 0){
-                  Player.attackFunc();
-              }
-              if(this.publicX == 1 && this.publicY == 2){
-                  Player.attackFunc();
-              }
-              if(this.publicX == 1 && this.publicY == 0){
-                  Player.attackFunc();
+              if(this.publicX == 0 && this.publicY == 0 ||
+                 this.publicX == 1 && this.publicY == 2 ||
+                 this.publicX == 1 && this.publicY == 0){
+                 Player.attackFunc();
               }
         },
 
@@ -315,10 +363,10 @@ let currPlayerHealth = Player.hitpoints;
 let currBossHealth = Npc.hitpoints;
 let currFName, currLName ="";
 let gameFrame;
-let gameSpeed = 1100;
+let gameSpeed = 2500;
 
-console.log("Welcome to Era Online");
-console.log("1. Start Game\n2. Options \n3. Exit");
+console.log("%cWelcome to Era Online", 'font-size: 30px; font-family: Verdana');
+console.log("%c1. Start Game ←", 'color:#376b77;font-weight:bold', "\n2. Options \n3. Exit");
 
 /* Initialize Game Loop if bool=>true */
 if(Menu.startGame){
