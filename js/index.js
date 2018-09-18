@@ -37,8 +37,10 @@ let Player = new function(){
                     this.myName = function(){
                         currFName = randFirstName;
                         currLName = randLastName;
+                        let counter = 1;
                         nameChoices.forEach(function(tag){
-                            console.log(`Name Choices: ${tag}`)
+                            console.log(`Name ${counter}. ${tag}`);
+                            counter++;
                         });
                         console.log(`huh...uh...${currFName}....${currLName}..\n\nPlease Call Me ${currFName} ${currLName} !`);
                     },
@@ -138,8 +140,6 @@ let World = {
     height: 5,
     publicX: 0,
     publicY: 0,
-    myX: 0,
-    myY: 0,
     caveCounter: 0,
     visit: false,
     /* The grid in which each coordinate is made from */
@@ -164,8 +164,6 @@ let World = {
                     /* create global variables*/
                     this.publicX = newX;
                     this.publicY = newY;
-                    this.myX = this.newX;
-                    this.myY = this.newY;
                 }
               }
            }
@@ -180,57 +178,57 @@ let World = {
               console.log(`You have spawned at coordinates: [${World.publicX}][${World.publicY}]\n`);
 
               if(this.publicX == 0 && this.publicY == 0){
-                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[O][X][X]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 0 && this.publicY == 1){
-                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][O][X]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 0 && this.publicY == 2){
-                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][O]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 1 && this.publicY == 0){
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[O][X][X]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 1 && this.publicY == 1){
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][O][X]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 1 && this.publicY == 2){
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][O]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
               }
 
               else if(this.publicX == 2 && this.publicY == 0){
-                console.log(`%c[X][X][X]`, 'background: #222; color: #b8e3ed');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
+                console.log(`%c[O][X][X]`, 'background: #222; color: #b8e3ed');
               }
 
               else if(this.publicX == 2 && this.publicY == 1){
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][${World.publicY}][X]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][O][X]`, 'background: #222; color: #b8e3ed');
               }
 
               else if(this.publicX == 2 && this.publicY == 2){
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
                 console.log(`%c[X][X][X]`, 'background: #222; color: #bada55');
-                console.log(`%c[${World.publicX}][X][${World.publicY}]`, 'background: #222; color: #b8e3ed');
+                console.log(`%c[X][X][O]`, 'background: #222; color: #b8e3ed');
               }
 
               console.log("\n");
@@ -331,8 +329,8 @@ let World = {
               }
         },
 
-        /* After reaching level 5 and [2][0] you will finish the game
-           and fight the final boss which is of course rigged for you
+        /* After reaching level 5 and Coordinates[2][0] you will finish
+           the game and fight the final boss which is of course rigged for you
            to always win. the fact that it's a (close call) is apart
            of the story */
         gameOver: function(){
