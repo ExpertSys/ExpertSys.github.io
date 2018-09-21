@@ -14,14 +14,14 @@ let Npc = {
 /* Player information */
 let Player = new function(){
     this.randomSpawn = [0,1,2];
-    this.firstName = "",
-    this.lastName = "",
     this.damage = 10,
+    this.gold = 0,
     this.hitpoints = 100,
-    this.mana = "",
     this.level = 1,
     this.experience = 0,
-    this.class = "",
+    this.class = ["Warrior","Archer","Mage"],
+    /* 0 = Warrrior / 1 = Archer / 2 = Mage */
+    this.classChoice = 0,
     this.playerX = 1,
     this.playerY = 2,
     this.inventory = "",
@@ -48,7 +48,7 @@ let Player = new function(){
                         hp = Player.hitpoints;
                         dmg = Player.damage;
                         console.log("Stats:\n");
-                        console.log(`Hitpoints: ${hp}\nDamage: ${dmg}\nLevel: ${Player.level}\n`);
+                        console.log(`Hitpoints: ${hp}\nDamage: ${dmg}\nLevel: ${Player.level}\nGold: ${Player.gold}\nClass: ${Player.class[Player.classChoice]}\n`);
                     }
                   },
 
@@ -59,10 +59,12 @@ let Player = new function(){
         if(Npc.hitpoints <= 0){
             Player.levelFunc();
             Npc.hitpoints = 0;
+            Player.gold += 55;
             console.log("\n");
             console.log("%c ----------------BATTLE-----------------", 'background: #222; color: #bada55');
             console.log(`\nYou've attacked the Enemy for ${Player.damage}`);
             console.log(`Enemy HP: ${Npc.hitpoints}`);
+            console.log(`Gold: ${Player.gold}`);
             console.log(`You are now level: ${Player.level}`);
             console.log("\nProceeding to next area.");
             console.log("---------------------------------------");
@@ -92,15 +94,7 @@ let Player = new function(){
         "Fate of darkness",
         "Exodia",
         "Scarred Secrect",
-        "Ultimate Gift",
-        "Franks Scent",
-        "Tornados Breath",
-        "Unstoppable Gist",
-        "Daga",
-        "Lost Hope",
-        "Final Thoughts",
-        "Devastater",
-        "Tenderizer"];
+        "Ultimate Gift",];
 
         let randomItem = Math.floor((Math.random() * itemList.length));
         inventory.push(itemList[randomItem]);
@@ -251,22 +245,65 @@ let World = {
                   }
 
               if(this.publicX == 1 && this.publicY == 1){
-                      console.log("\n\n");
-                      console.log("%c ----------------GEMS SHOP-----------------", 'background: #222; color: #bada55');
-                      console.log("My name is Gem, and i'm afraid that this isn't your home.\n");
-                      console.log("Although, i'll offer a hint... The first digit is 2.");
+                    let gemShop = {
+                          50: "You purchased a Ruby for 50 Gold.",
+                          100: "You purchased a Sapphire for 100 Gold.",
+                          150: "You purchased a Emerald for 150 Gold.",
+                          200: "You purchased a Diamond for 200 Gold.",
+                    };
+
+                    gemOptions = ["Ruby","Sapphire","Emerald","Diamond"];
+                    let storeCounter = 1;
+                    let rubyFormula = Player.gold >= 50 && Player.gold < 100;
+                    let sapphireFormula = Player.gold > 100 && Player.gold < 150;
+                    let EmeraldFormula = Player.gold > 150 && Player.gold < 200;
+                    let DiamondFormula = Player.gold > 200;
+
+                    getRuby = rubyFormula ? `You purchased a ${gemShop["25"]}.` : `You could not afford a ${gemShop["25"]}.`;
+                    getSapphire = sapphireFormula ? `You purchased a ${gemShop["100"]}.` : `You could not afford a ${gemShop["100"]}`;
+                    getEmerald = EmeraldFormula ? `You purchased a ${gemShop["150"]}.` : `You could not afford a ${gemShop["150"]}`;
+                    getDiamond = DiamondFormula ? `You purchased a ${gemShop["200"]}.` : `You could not afford a ${gemShop["200"]}`;
+
+                    console.log("\n\n");
+                    console.log("%c ----------------GEMS SHOP-----------------", 'background: #222; color: #bada55');
+                    console.log("My name is Gem, and i'm afraid that this isn't your home.\n");
+                    console.log("Although, i'll offer a hint... The first digit is 2.");
+                    gemOptions.forEach(function(option){
+                        console.log(`Item ${storeCounter}. ${option}`);
+                        storeCounter++;
+                    });
+                    console.log(`%cIf you have enough gold, you can purchase a random item from my Gem Shop!`, `color:green;`);
+
+                    if(Player.gold >= 50){
+                        if(rubyFormula){Player.gold -= 50; console.log(`You purchased a Ruby!`);}
+                        if(sapphireFormula){Player.gold -= 100; console.log(`You purchased a Sapphire!`);}
+                        if(EmeraldFormula){Player.gold -= 150; console.log(`You purchased a Emerald!`);}
+                        if(DiamondFormula){Player.gold -= 200; console.log(`You purchased a Diamond!`);}
+                        console.log(`Gold: ${Player.gold}`);
+                    } else{
+                        console.log(`Gold: ${Player.gold}`);
+                        console.log(`%cYou don't have enough gold to purchase anything :(`,`color:red;`);
+                    }
+
                       setTimeout(function(){
-                          console.log("%c It may not seem like much but if you use this hint to your advantage, it will supplement you on your journey.", 'color: red');
+                      console.log("%c It may not seem like much but if you use this hint to your advantage, it will supplement you on your journey.", 'color: red');
                       },100);
                       console.log("------------------------------------------");
                       console.log("\n");
               }
 
               if(this.publicX == 0 && this.publicY == 1){
+                let chestCounter = 1;
+                let itemList =
+                ["Demon Blade","Fate of darkness","Exodia","Scarred Secrect","Ultimate Gift"];
                       console.log("\n\n");
                       console.log("%c ------------------WEAPON CHEST----------------------", 'background: #222; color: #bada55');
                       console.log("You enter a Weapon Shop and retrieve a new weapon!\n");
                       console.log("----------------------------------------------------");
+                      itemList.forEach(function(option){
+                          console.log(`Weapon ${chestCounter}. ${option}`);
+                          chestCounter++;
+                      });
                       Player.inventory();
                       setTimeout(function(){
                           console.log("%c Congragulations on your new gear. Various rumours have been spoken about how powerful that weapon is.", 'color: red');
@@ -339,7 +376,11 @@ let World = {
             console.log("to find your home. Throughout this entire journey, you've met many different\n");
             console.log("people. You've also became really strong.");
             console.log(`Level: ${Player.level}\n`);
-            console.log(`Weapons Collected: ${Player.myInventory}`);
+            if(Player.myInventory <= 0){
+                console.log(`Weapons Collected: You didn't find any weapons!`);
+            }else{
+                console.log(`Weapons Collected: ${Player.myInventory}`);
+            }
             console.log(`Throughout your task, you've spoke to many individuals and unlocked hints that led you\n`);
             console.log(`to where you are now. You are now able to take on the final boss. Goodluck.`);
             console.log("%c -------------------FINAL BOSS--------------------", 'background: #222; color: #bada55');
@@ -361,15 +402,15 @@ let currPlayerHealth = Player.hitpoints;
 let currBossHealth = Npc.hitpoints;
 let currFName, currLName ="";
 let gameFrame;
-let gameSpeed = 2500;
+let gameSpeed = 1500;
 
 console.log("%cWelcome to Era Online", 'font-size: 30px; font-family: Verdana');
 console.log("%c1. Start Game ←", 'color:#376b77;font-weight:bold', "\n2. Options \n3. Exit");
 
 /* Initialize Game Loop if bool=>true */
 if(Menu.startGame){
-    console.log(Player.personalInfo.myName());
-    console.log(Player.personalInfo.myStats());
+    Player.personalInfo.myName();
+    Player.personalInfo.myStats();
 
     setTimeout(function(){
       gameFrame = setInterval(function(){
