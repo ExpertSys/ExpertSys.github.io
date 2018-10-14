@@ -5,13 +5,24 @@ let Menu = {
     exitGame: false
 };
 
-/* The stats of the enemy */
-let Npc = {
-    hitpoints: 3,
-    damage: 3
-};
+let storyTime = new Date();
+setInterval(() => document.getElementById("currentTime").innerHTML= storyTime.toUTCString()
+, 1000);
 
-/* Player information */
+/* Create and Initialize Enemy */
+function Npc(hitpoints){
+    this.hitpoints = hitpoints;
+}
+
+let wildCreature = new Npc(10);
+
+Npc.prototype = {
+    constructor: Npc,
+    damage: 3,
+    turn: 1
+}
+
+/* Player information Constructor*/
 let Player = new function(){
     this.randomSpawn = [0,1,2];
     this.damage = 10,
@@ -21,12 +32,12 @@ let Player = new function(){
     this.experience = 0,
     this.class = ["Warrior","Archer","Mage"],
     /* 0 = Warrrior / 1 = Archer / 2 = Mage */
-    this.classChoice = 0,
+    this.classChoice = 1,
     this.playerX = 1,
     this.playerY = 2,
     this.inventory = "",
 
-    /* Nested constructor function to provide more information about the player */
+    /* Nested constructor object to provide more information about the player */
     this.personalInfo = new function()
                   {
                     nameChoices = ["Daunted", "Fighter", "Jester", "Knight", "Chaos", "Cloud", "Freedom"],
@@ -50,20 +61,25 @@ let Player = new function(){
                         console.log("Stats:\n");
                         console.log(`Hitpoints: ${hp}\nDamage: ${dmg}\nLevel: ${Player.level}\nGold: ${Player.gold}\nClass: ${Player.class[Player.classChoice]}\n`);
                     }
+                    this.intro = function(){
+                        console.log("You wake up in a unknown place, wondering where you are.");
+                        console.log("After a few minutes, you step outside and notice lots of Inns, creatures, and strange people.");
+                        console.log("You see a floating pad in which you step on and it takes you to a new location....");
+                    }
                   },
 
     /* Attack mechanic */
     this.attackFunc = function(dmg){
         dmg = this.damage;
-        Npc.hitpoints -= dmg;
-        if(Npc.hitpoints <= 0){
+        wildCreature.hitpoints -= dmg;
+        if(wildCreature.hitpoints <= 0){
             Player.levelFunc();
-            Npc.hitpoints = 0;
-            Player.gold += 55;
+            wildCreature.hitpoints = 0;
+            Player.gold += 26;
             console.log("\n");
             console.log("%c ----------------BATTLE-----------------", 'background: #222; color: #bada55');
             console.log(`\nYou've attacked the Enemy for ${Player.damage}`);
-            console.log(`Enemy HP: ${Npc.hitpoints}`);
+            console.log(`Enemy HP: ${wildCreature.hitpoints}`);
             console.log(`Gold: ${Player.gold}`);
             console.log(`You are now level: ${Player.level}`);
             console.log("\nProceeding to next area.");
@@ -155,7 +171,7 @@ let World = {
 
                 if(this.map[this.x] == this.map[row] && this.map[this.y] == this.map[column])
                 {
-                    /* create global variables*/
+                    /* convert the coordinates to global variables to be used outside of it's initializer function */
                     this.publicX = newX;
                     this.publicY = newY;
                 }
@@ -245,46 +261,60 @@ let World = {
                   }
 
               if(this.publicX == 1 && this.publicY == 1){
-                    let gemShop = {
-                          50: "You purchased a Ruby for 50 Gold.",
-                          100: "You purchased a Sapphire for 100 Gold.",
-                          150: "You purchased a Emerald for 150 Gold.",
-                          200: "You purchased a Diamond for 200 Gold.",
-                    };
-
-                    gemOptions = ["Ruby","Sapphire","Emerald","Diamond"];
                     let storeCounter = 1;
                     let rubyFormula = Player.gold >= 50 && Player.gold < 100;
                     let sapphireFormula = Player.gold > 100 && Player.gold < 150;
                     let EmeraldFormula = Player.gold > 150 && Player.gold < 200;
                     let DiamondFormula = Player.gold > 200;
 
-                    getRuby = rubyFormula ? `You purchased a ${gemShop["25"]}.` : `You could not afford a ${gemShop["25"]}.`;
-                    getSapphire = sapphireFormula ? `You purchased a ${gemShop["100"]}.` : `You could not afford a ${gemShop["100"]}`;
-                    getEmerald = EmeraldFormula ? `You purchased a ${gemShop["150"]}.` : `You could not afford a ${gemShop["150"]}`;
-                    getDiamond = DiamondFormula ? `You purchased a ${gemShop["200"]}.` : `You could not afford a ${gemShop["200"]}`;
-
                     console.log("\n\n");
                     console.log("%c ----------------GEMS SHOP-----------------", 'background: #222; color: #bada55');
                     console.log("My name is Gem, and i'm afraid that this isn't your home.\n");
                     console.log("Although, i'll offer a hint... The first digit is 2.");
-                    gemOptions.forEach(function(option){
-                        console.log(`Item ${storeCounter}. ${option}`);
-                        storeCounter++;
-                    });
-                    console.log(`%cIf you have enough gold, you can purchase a random item from my Gem Shop!`, `color:green;`);
+                    console.log(`%cIf you have enough gold, you can purchase a random item\n from my Gem Shop!`, `color:green;`);
 
-                    if(Player.gold >= 50){
-                        if(rubyFormula){Player.gold -= 50; console.log(`You purchased a Ruby!`);}
-                        if(sapphireFormula){Player.gold -= 100; console.log(`You purchased a Sapphire!`);}
-                        if(EmeraldFormula){Player.gold -= 150; console.log(`You purchased a Emerald!`);}
-                        if(DiamondFormula){Player.gold -= 200; console.log(`You purchased a Diamond!`);}
+                    let gemShop = {
+                          Ruby: {
+                              name: "Ruby",
+                              50: "You purchased a Ruby for 50 Gold."
+                          },
+                          Sapphire: {
+                              name: "Sapphire",
+                              100: "You purchased a Sapphire for 100 Gold.",
+                          },
+                          Emerald: {
+                              name: "Emerald",
+                              150: "You purchased a Emerald for 150 Gold."
+                          },
+                          Diamond: {
+                              name: "Diamond",
+                              200: "You purchased a Diamond for 200 Gold."
+                          }
+                    };
+
+                    for(var gemName in gemShop){
+                        if(gemShop.hasOwnProperty(gemName)){
+                            console.log(`Item ${storeCounter}. ${gemName}`);
+                            storeCounter++;
+                        }
+                    }
+
+                    getRuby = rubyFormula ? true : `You could not afford a ${gemShop.Ruby["name"]}.`;
+                    getSapphire = sapphireFormula ? true : `You could not afford a ${gemShop.Sapphire["name"]}`;
+                    getEmerald = EmeraldFormula ? true : `You could not afford a ${gemShop.Emerald["name"]}`;
+                    getDiamond = DiamondFormula ? true : `You could not afford a ${gemShop.Diamond["name"]}`;
+
+                    /* Checks if player has a minimum of 50 gold */
+                    if(Player.gold >= 25){
+                        if(rubyFormula){Player.gold -= 50; console.log(`${gemShop.Ruby["50"]}`);}
+                        if(sapphireFormula){Player.gold -= 100; console.log(`${gemShop.Sapphire["100"]}`);}
+                        if(EmeraldFormula){Player.gold -= 150; console.log(`${gemShop.Emerald["150"]}`);}
+                        if(DiamondFormula){Player.gold -= 200; console.log(`${gemShop.Diamond["200"]}`);}
                         console.log(`Gold: ${Player.gold}`);
                     } else{
                         console.log(`Gold: ${Player.gold}`);
                         console.log(`%cYou don't have enough gold to purchase anything :(`,`color:red;`);
                     }
-
                       setTimeout(function(){
                       console.log("%c It may not seem like much but if you use this hint to your advantage, it will supplement you on your journey.", 'color: red');
                       },100);
@@ -313,7 +343,7 @@ let World = {
 
               if(this.publicX == 2 && this.publicY == 1){
                       console.log("\n\n");
-                      console.log("%c ------------------Helpful Thought----------------------", 'background: #222; color: #bada55');
+                      console.log("%c ------------------Wise Old Man----------------------", 'background: #222; color: #bada55');
                       console.log("The path home can seem like a long and difficult one but remember not to give up.!\n");
                       console.log("-------------------------------------------------------");
                       setTimeout(function(){
@@ -374,8 +404,10 @@ let World = {
             console.log("%c ------------------Story Climax----------------------", 'background: #222; color: #bada55');
             console.log("After traveling through mountins, forests, and castles, you've finally managed\n");
             console.log("to find your home. Throughout this entire journey, you've met many different\n");
-            console.log("people. You've also became really strong.");
+            console.log("people. You've also become really strong.");
             console.log(`Level: ${Player.level}\n`);
+
+            /*Display the players final stats / weapons towards reaching the end of the story*/
             if(Player.myInventory <= 0){
                 console.log(`Weapons Collected: You didn't find any weapons!`);
             }else{
@@ -399,7 +431,7 @@ let World = {
 
 /* Global variables for various things */
 let currPlayerHealth = Player.hitpoints;
-let currBossHealth = Npc.hitpoints;
+let currBossHealth = wildCreature.hitpoints;
 let currFName, currLName ="";
 let gameFrame;
 let gameSpeed = 1500;
@@ -411,6 +443,7 @@ console.log("%c1. Start Game ←", 'color:#376b77;font-weight:bold', "\n2. Optio
 if(Menu.startGame){
     Player.personalInfo.myName();
     Player.personalInfo.myStats();
+    Player.personalInfo.intro();
 
     setTimeout(function(){
       gameFrame = setInterval(function(){
