@@ -1,3 +1,4 @@
+
 /* Game initializer */
 let Menu = {
     startGame: true,
